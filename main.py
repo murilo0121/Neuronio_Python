@@ -12,9 +12,9 @@ def sigmoid(x):
     return 1 / (1 + math.exp(-x))
 
 
-def setp(x):
+def step(x):
     a = 2.5  # ESSE É O VALOR DO SETP, CASO DESEJE ALTERAR
-    return 1 if x < a else 0
+    return 1 if x > a else 0
 
 
 class Axonio():
@@ -32,11 +32,8 @@ class Neuronio():
         self.dendritos = dendritos
         self.funcao = func
 
-    def treinamento(self, amostra, saidas, epocas, taxa_aprendizado, limiar):
-        for matriz in amostra:
-            matriz.insert(0, -1)
+    def treinamento(self, amostra, saidas, epocas, taxa_aprendizado):
 
-        self.dendritos.peso.insert(0, limiar)  # LIMIAR AQUI É USADO PARA BALANCEAR É DIFERENTE DO LIMIAR DA FUNC STEP
         numeroDeEpocas = 0
 
         while True:
@@ -48,6 +45,7 @@ class Neuronio():
                 if resultado != saidas[i]:
                     erroAux = saidas[i] - resultado
                     for j in range(len(self.dendritos.peso)):
+                        a = self.dendritos.peso[j] + taxa_aprendizado * erroAux * amostra[i][j]
                         self.dendritos.peso[j] = self.dendritos.peso[j] + taxa_aprendizado * erroAux * amostra[i][j]
                     err = True
             numeroDeEpocas += 1
@@ -59,14 +57,15 @@ class Neuronio():
         print(self.dendritos.peso)
 
     def start(self, amostra):
-        amostra.insert(0, -1)
         resultado = self.funcao(self.somatorio(amostra))
-        if (resultado >= 0):
-            print('1')
-            return 1
-        if (resultado < 0):
-            print('-1')
-            return -1
+        print (resultado)
+
+        # if (resultado >= 0):
+        #     print('1')
+        #     return 1
+        # if (resultado < 0):
+        #     print('-1')
+        #     return -1
 
     def somatorio(self, amostra):
         soma = 0
@@ -79,24 +78,34 @@ def criaDendridos(quantidadeDentridos):
     dendritos = []
     j = quantidadeDentridos
     for i in range(quantidadeDentridos):
-        dendritos.append(0.5)
+        dendritos.append(0.2)
     return dendritos
 
 
 if __name__ == '__main__':
-    amostras = [[0,0,0,0,1], [0,0,1,0,1],[0,1,1,1,0],[1,1,0,0,0],[0,1,0,0,0],[1,0,0,0,0],[0,0,0,0,0],[0,1,1,0,0],
-                [1,0,1,0,0],[1,1,1,0,1],[1,0,1,1,0],[1,1,0,1,0],[0,1,0,1,1],[1,1,0,0,0],[0,1,1,0,0],[1,1,0,1,0]]
+    # amostras = [[0,0,0,0,1], [0,0,1,0,1],[0,1,1,1,0],[1,1,0,0,0],[0,1,0,0,0],[1,0,0,0,0],[0,1,1,0,0],[0,0,0,0,0],[0,1,1,0,0],
+    #             [1,0,1,0,0],[1,1,1,0,1],[1,0,1,1,0],[1,1,0,1,0],[0,1,0,1,1],[1,1,0,0,0],[1,1,0,1,0]]
+
+    amostras = [[0,0,0,0,0]	,	[1,1,1,1,1]	,
+[0,0,0,0,1]	,	[1,1,1,1,0]	,
+[0,0,0,1,0]	,	[1,1,1,0,1]	,
+[0,0,1,0,0]	,	[1,1,0,1,1]	,
+[0,1,0,0,0]	,	[1,0,1,1,1]	,
+[1,0,0,0,0]	,	[0,1,1,1,1]	,
+[0,0,0,1,1]	,	[1,1,1,0,0]	,
+[0,0,1,1,0]	,	[1,1,0,0,1]	,
+[0,1,1,0,0]]
 
     # ESSA SAIDA CORRESPONDE A SAIDA DE CADA UM DOS CONJUTNOS DE NEURONIO DA AMOSTRAS
     # EX: [0.72, 0.82] SAIDA -1, [0.91, -0.69] SAIDA -1
-    saidas = [0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,1]
+    saidas = [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0]
 
     quantidadeDeDendritos = len(amostras[0])
     dendritos = Dendrito(criaDendridos(quantidadeDeDendritos))  # CRIA OS DENDRITOS, COM VALORES RAND ENTRE -1 E 1
-    neuronio = Neuronio(dendritos, sign)  # ENVIAR A LISTA DE DENDRITOS E A FUNCAO QUE SE DESEJA PASSAR
+    neuronio = Neuronio(dendritos, step)  # ENVIAR A LISTA DE DENDRITOS E A FUNCAO QUE SE DESEJA PASSAR
     neuronio.mostra()
-    neuronio.treinamento(amostras, saidas, 1000, 0.3, -1)  # TREINA
+    neuronio.treinamento(amostras, saidas, 1000, 0.3)  # TREINA
     neuronio.mostra()
-    amostras = [1,1,1,0,1]
+    amostras = [1,1,1,0,0]
     a = neuronio.start(amostras)  # INICIA A AMOSTRA PARA VERIFICAR O RESULTADO ATRAVEZ DOS PESOS DE DENDRITOS TREINADOS ATERIORMENTE
     axonio1 = Axonio(a)
