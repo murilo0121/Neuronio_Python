@@ -48,6 +48,7 @@ class Neuronio():
                         a = self.dendritos.peso[j] + taxa_aprendizado * erroAux * amostra[i][j]
                         self.dendritos.peso[j] = self.dendritos.peso[j] + taxa_aprendizado * erroAux * amostra[i][j]
                     err = True
+                    self.mostra()
             numeroDeEpocas += 1
 
             if numeroDeEpocas > epocas:
@@ -94,18 +95,25 @@ if __name__ == '__main__':
 [1,0,0,0,0]	,	[0,1,1,1,1]	,
 [0,0,0,1,1]	,	[1,1,1,0,0]	,
 [0,0,1,1,0]	,	[1,1,0,0,1]	,
-[0,1,1,0,0]]
+[0,1,1,0,0]	,	[1,0,0,1,1]	,
+[1,1,0,0,0]	,	[0,0,1,1,1]	,
+[0,0,1,0,1]	,	[1,1,0,1,0]	,
+[0,0,0,0,1]	,	[1,1,1,1,0]	,
+[0,1,0,0,1]	,	[1,0,1,1,0]	,
+[1,0,0,0,1]	,	[0,1,1,1,0]	,
+[0,1,0,1,0]	,	[1,0,1,0,1]	,
+[1,0,1,0,0]	,	[0,1,0,1,1]	]
 
     # ESSA SAIDA CORRESPONDE A SAIDA DE CADA UM DOS CONJUTNOS DE NEURONIO DA AMOSTRAS
     # EX: [0.72, 0.82] SAIDA -1, [0.91, -0.69] SAIDA -1
-    saidas = [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0]
+    saidas = [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1]
 
     quantidadeDeDendritos = len(amostras[0])
     dendritos = Dendrito(criaDendridos(quantidadeDeDendritos))  # CRIA OS DENDRITOS, COM VALORES RAND ENTRE -1 E 1
     neuronio = Neuronio(dendritos, step)  # ENVIAR A LISTA DE DENDRITOS E A FUNCAO QUE SE DESEJA PASSAR
     neuronio.mostra()
-    neuronio.treinamento(amostras, saidas, 1000, 0.3)  # TREINA
+    neuronio.treinamento(amostras, saidas, 100, 0.3)  # TREINA
     neuronio.mostra()
-    amostras = [1,1,1,0,0]
+    amostras = [1,1,0,0,0]
     a = neuronio.start(amostras)  # INICIA A AMOSTRA PARA VERIFICAR O RESULTADO ATRAVEZ DOS PESOS DE DENDRITOS TREINADOS ATERIORMENTE
     axonio1 = Axonio(a)
